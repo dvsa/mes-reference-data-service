@@ -9,11 +9,11 @@ package:
   individually: true
 
 functions:
-  getLambda:
-    handler: src/functions/getLambda/framework/handler.handler
+  getTestCentres:
+    handler: src/functions/getTestCentres/framework/handler.handler
     events:
       - http:
-          path: 'data/{value}'
+          path: 'test-centres'
           method: get
 custom:
   stages:

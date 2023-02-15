@@ -21,4 +21,5 @@ artefacts
 .serverless/
 .nyc_output/
 .env
+.env.local
 .idea/

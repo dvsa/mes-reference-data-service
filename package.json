@@ -29,7 +29,9 @@
   },
   "dependencies": {
     "@dvsa/mes-microservice-common": "^0.8.3",
-    "aws-sdk": "^2.1200.0"
+    "aws-sdk": "^2.1200.0",
+    "date-fns": "^2.29.3",
+    "mysql2": "^2.3.3"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.106",
