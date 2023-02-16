@@ -6,6 +6,7 @@ import Response from '../../../common/application/api/Response';
 import { bootstrapConfig } from '../../../common/config/config';
 import { findTestCentres } from './repositories/active-test-centres';
 import { getDate } from './repositories/get-date';
+import { TestCentres } from '../../../common/domain/test-results';
 
 export async function handler(event: APIGatewayProxyEvent): Promise<Response> {
   bootstrapLogging('identify active test centres', event);
@@ -18,7 +19,7 @@ export async function handler(event: APIGatewayProxyEvent): Promise<Response> {
 
   await bootstrapConfig();
   try {
-    const testCentres = await findTestCentres();
+    const testCentres: TestCentres[] = await findTestCentres();
 
     // TODO: use query parameters to filter payload for
     //   1. all current active test centres

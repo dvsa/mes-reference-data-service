@@ -4,7 +4,7 @@ import * as mysql from 'mysql2';
  * Get all active test centres.
  * @returns The examiners
  */
-export const getTestCentres = async (): Promise<string> => {
+export const getTestCentres = (): string => {
   // Todo: amend query to use these parameters when fields are available for commission and decommission dates
   const query = `
             SELECT TC.TC_ID

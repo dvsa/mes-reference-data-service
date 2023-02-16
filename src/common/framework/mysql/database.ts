@@ -1,7 +1,7 @@
 import * as mysql from 'mysql2';
 
 export const query = async (
-  connection: mysql.Connection | mysql.Pool,
+  connection: mysql.Connection,
   sql: string,
   args?: any,
 ): Promise<unknown> => new Promise((resolve, reject) => {
