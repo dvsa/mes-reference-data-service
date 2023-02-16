@@ -3,9 +3,9 @@ import { bootstrapLogging, error } from '@dvsa/mes-microservice-common/applicati
 import { HttpStatus } from '../../../common/application/api/HttpStatus';
 import createResponse from '../../../common/application/utils/createResponse';
 import Response from '../../../common/application/api/Response';
-import { bootstrapConfig } from './config/config';
-import { findTestCentres } from './application/active-test-centres';
-import { getDate } from './application/get-date';
+import { bootstrapConfig } from '../../../common/config/config';
+import { findTestCentres } from './repositories/active-test-centres';
+import { getDate } from './repositories/get-date';
 
 export async function handler(event: APIGatewayProxyEvent): Promise<Response> {
   bootstrapLogging('identify active test centres', event);

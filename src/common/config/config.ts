@@ -1,4 +1,4 @@
-import { throwIfNotPresent, tryFetchRdsAccessToken } from '../../../../common/config/config-helpers';
+import { throwIfNotPresent, tryFetchRdsAccessToken } from './config-helpers';
 
 export type Config = {
   isOffline: boolean;
