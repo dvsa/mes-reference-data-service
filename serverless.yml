@@ -13,7 +13,7 @@ functions:
     handler: src/functions/getTestCentres/framework/handler.handler
     events:
       - http:
-          path: 'test-centres'
+          path: 'ref-data/test-centres'
           method: get
 custom:
   stages:
