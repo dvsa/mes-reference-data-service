@@ -1,16 +1,16 @@
 {
-  "name": "mes-microservices-starter-template",
-  "version": "0.1.0",
+  "name": "mes-reference-data-service",
+  "version": "0.0.1",
   "author": "DVSA",
   "license": "MIT",
-  "description": "A starter template for lambda microservices in the MES project",
-  "homepage": "https://github.com/dvsa/mes-microservices-starter-template#README.md",
+  "description": "A lambda microservices to return reference data for use in the MES project",
+  "homepage": "https://github.com/dvsa/mes-reference-data-service#README.md",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dvsa/mes-microservices-starter-template.git"
+    "url": "git+https://github.com/dvsa/mes-reference-data-service.git"
   },
   "bugs": {
-    "url": "https://github.com/dvsa/mes-microservices-starter-template/issues"
+    "url": "https://github.com/dvsa/mes-reference-data-service/issues"
   },
   "scripts": {
     "clean": "rimraf build artefacts",
@@ -29,7 +29,9 @@
   },
   "dependencies": {
     "@dvsa/mes-microservice-common": "^0.8.3",
-    "aws-sdk": "^2.1200.0"
+    "aws-sdk": "^2.1200.0",
+    "date-fns": "^2.29.3",
+    "mysql2": "^2.3.3"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.106",
