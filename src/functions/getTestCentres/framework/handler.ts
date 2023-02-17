@@ -1,12 +1,12 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { bootstrapLogging, error } from '@dvsa/mes-microservice-common/application/utils/logger';
+import { TestCentre } from '@dvsa/mes-journal-schema';
 import { HttpStatus } from '../../../common/application/api/HttpStatus';
 import createResponse from '../../../common/application/utils/createResponse';
 import Response from '../../../common/application/api/Response';
 import { bootstrapConfig } from '../../../common/config/config';
 import { findTestCentres } from './repositories/active-test-centres';
 import { getDate } from './repositories/get-date';
-import { TestCentres } from '../../../common/domain/test-results';
 
 export async function handler(event: APIGatewayProxyEvent): Promise<Response> {
   bootstrapLogging('identify active test centres', event);
@@ -19,7 +19,7 @@ export async function handler(event: APIGatewayProxyEvent): Promise<Response> {
 
   await bootstrapConfig();
   try {
-    const testCentres: TestCentres[] = await findTestCentres();
+    const testCentres: TestCentre[] = await findTestCentres();
 
     // TODO: use query parameters to filter payload for
     //   1. all current active test centres
