@@ -26,8 +26,8 @@ export async function handler(event: APIGatewayProxyEvent): Promise<Response> {
     //   2. all test centres that have been active over the last 2 years (over if decommission date provided)
 
     return createResponse({
-      activeTestCentres: testCentres,
-      activeAndDecommissionedTestCentre: testCentres,
+      active: testCentres,
+      inactive: testCentres,
     }, 200);
   } catch (err: unknown) {
     error(err as string);
