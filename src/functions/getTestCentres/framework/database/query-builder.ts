@@ -5,7 +5,6 @@ import * as mysql from 'mysql2';
  * @returns The examiners
  */
 export const getTestCentres = (): string => {
-  // Todo: amend query to use these parameters when fields are available for commission and decommission dates
   const query = `
             SELECT TC.TC_ID as centreId
                  , TC.TC_COST_CENTRE_CODE as costCode
