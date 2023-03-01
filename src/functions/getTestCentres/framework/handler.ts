@@ -1,33 +1,40 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { bootstrapLogging, error } from '@dvsa/mes-microservice-common/application/utils/logger';
-import { TestCentre } from '@dvsa/mes-journal-schema';
+import { isBefore } from 'date-fns';
 import { HttpStatus } from '../../../common/application/api/HttpStatus';
 import createResponse from '../../../common/application/utils/createResponse';
 import Response from '../../../common/application/api/Response';
 import { bootstrapConfig } from '../../../common/config/config';
 import { findTestCentres } from './repositories/active-test-centres';
 import { getDate } from './repositories/get-date';
+import { ExtendedTestCentre } from '../../../common/domain/extended-test-centre';
 
 export async function handler(event: APIGatewayProxyEvent): Promise<Response> {
   bootstrapLogging('identify active test centres', event);
 
+  // Set dates to parameters OR defaults
   const testCentreActiveDate = getDate(event.queryStringParameters, 'testCentreActiveDate');
-  const decommissionDate = getDate(event.queryStringParameters, 'decommissionTimeFrame');
-
-  console.log('testCentreActiveDate', testCentreActiveDate);
-  console.log('decommissionDate', decommissionDate);
+  const testCentreDecommissionDate = getDate(event.queryStringParameters, 'decommissionTimeFrame');
 
   await bootstrapConfig();
   try {
-    const testCentres: TestCentre[] = await findTestCentres();
+    const allTestCentres: ExtendedTestCentre[] = await findTestCentres();
 
-    // TODO: use query parameters to filter payload for
-    //   1. all current active test centres
-    //   2. all test centres that have been active over the last 2 years (over if decommission date provided)
+    // extract centres between the specified dates
+    const activeTestCentres: ExtendedTestCentre[] = allTestCentres.filter((centre) => (
+      (centre.commissionDate === null
+                    || isBefore(centre.commissionDate, new Date(testCentreActiveDate)))
+                && (centre.decommissionDate === null
+                    || isBefore(new Date(testCentreDecommissionDate), centre.decommissionDate))
+    ));
+
+    // find all centres that wernt between the dates
+    const inactiveTestCentres: ExtendedTestCentre[] = allTestCentres
+      .filter((centre) => activeTestCentres.indexOf(centre) < 0);
 
     return createResponse({
-      active: testCentres,
-      inactive: testCentres,
+      active: activeTestCentres,
+      inactive: inactiveTestCentres,
     }, 200);
   } catch (err: unknown) {
     error(err as string);
