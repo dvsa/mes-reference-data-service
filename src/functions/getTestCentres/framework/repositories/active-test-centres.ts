@@ -19,5 +19,4 @@ export const findTestCentres: () => Promise<any> = async () => {
   }
 
   return result;
-  // return connection;
 };

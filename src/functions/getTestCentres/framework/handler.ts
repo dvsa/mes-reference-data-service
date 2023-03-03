@@ -36,7 +36,6 @@ export async function handler(event: APIGatewayProxyEvent): Promise<Response> {
       active: activeTestCentres.map(({ commissionDate, decommissionDate, ...centres }) => centres),
       inactive: inactiveTestCentres.map(({ commissionDate, decommissionDate, ...centres }) => centres),
     }, 200);
-    // return createResponse('hello world', 200);
   } catch (err: unknown) {
     error(err as string);
     return createResponse('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
