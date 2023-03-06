@@ -24,16 +24,11 @@ export const bootstrapConfig = async (): Promise<void> => {
       process.env.TARS_REPLICA_DB_USERNAME,
       'tarsReplicaDatabaseUsername',
     ),
-    tarsReplicaDatabasePassword: process.env.IS_OFFLINE
-      ? throwIfNotPresent(
-        process.env.SECRET_DB_PASSWORD_KEY,
-        'tarsReplicaDatabasePassword',
-      )
-      : await tryFetchRdsAccessToken(
-        process.env.TARS_REPLICA_ENDPOINT,
-        process.env.TARS_REPLICA_DB_USERNAME,
-        'SECRET_DB_PASSWORD_KEY',
-      ),
+    tarsReplicaDatabasePassword: await tryFetchRdsAccessToken(
+      process.env.TARS_REPLICA_ENDPOINT,
+      process.env.TARS_REPLICA_DB_USERNAME,
+      'SECRET_DB_PASSWORD_KEY',
+    ),
   };
 };
 
