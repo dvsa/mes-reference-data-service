@@ -1,110 +1,73 @@
-// import { APIGatewayEvent, Context } from 'aws-lambda';
-// import { handler } from '../handler';
-// const lambdaTestUtils = require('aws-lambda-test-utils');
-// import { Mock, It, Times } from 'typemoq';
-// // import {
-// //   queryParameter,
-// //   queryParameterWith8DigitAppRef,
-// //   sampleToken_12345678, testResult,
-// //   testResultResponse,
-// // } from './handler.spec.data';
-//
-// describe('searchResults handler', () => {
-//   let dummyApigwEvent: APIGatewayEvent;
-//   let dummyContext: Context;
-//   // const moqBootstrapConfig = Mock.ofInstance(configSvc.bootstrapConfig);
-//
-//   // beforeEach(() => {
-//   //   moqBootstrapConfig.reset();
-//   //
-//   //   dummyApigwEvent = lambdaTestUtils.mockEventCreator.createAPIGatewayEvent({
-//   //     headers: {
-//   //       Authorization: sampleToken_12345678,
-//   //     },
-//   //   });
-//   //
-//   //   dummyContext = lambdaTestUtils.mockContextCreator(() => null);
-//   //   process.env.EMPLOYEE_ID_EXT_KEY = 'extn.employeeId';
-//   //
-//   //   spyOn(searchResultsSvc, 'getConciseSearchResults').and.callFake(moqSearchResults.object);
-//   //   spyOn(configSvc, 'bootstrapConfig').and.callFake(moqBootstrapConfig.object);
-//   // });
-//
-//   describe('call handler', () => {
-//     it('return test centres as responce with 200', async () => {
-//       // dummyApigwEvent.requestContext.authorizer = {
-//       //   examinerRole: UserRole.LDTM,
-//       // };
-//       // dummyApigwEvent.queryStringParameters['startDate'] = queryParameter.startDate;
-//       // dummyApigwEvent.queryStringParameters['endDate'] = queryParameter.endDate;
-//       // dummyApigwEvent.queryStringParameters['driverNumber'] = queryParameter.driverNumber;
-//       // dummyApigwEvent.queryStringParameters['dtcCode'] = queryParameter.dtcCode;
-//       // dummyApigwEvent.queryStringParameters['staffNumber'] = queryParameter.staffNumber;
-//       // dummyApigwEvent.queryStringParameters['applicationReference'] = queryParameter.applicationReference;
-//       // dummyApigwEvent.queryStringParameters['excludeAutoSavedTests'] = queryParameter.excludeAutoSavedTests;
-//       // dummyApigwEvent.queryStringParameters['activityCode'] = queryParameter.activityCode;
-//       // dummyApigwEvent.queryStringParameters['category'] = queryParameter.category;
-//       // dummyApigwEvent.queryStringParameters['passCertificateNumber'] = queryParameter.passCertificateNumber;
-//       // moqSearchResults.setup(x => x(It.isAny())).returns(() => Promise.resolve(testResult));
-//       const resp = await handler(dummyApigwEvent, dummyContext);
-//       expect(resp.statusCode).toBe(200);
-//       expect(JSON.parse(resp.body)).toEqual(testResultResponse);
-//       moqSearchResults.verify(x => x(It.isObjectWith(queryParameter)), Times.once());
-//     });
-//   });
-//
-//   describe('using valid query parameters as LDTM, 8 digit application reference', () => {
-//     it('gets the relevant results', async () => {
-//       dummyApigwEvent.requestContext.authorizer = {
-//         examinerRole: UserRole.LDTM,
-//       };
-//       dummyApigwEvent.queryStringParameters['startDate'] = queryParameterWith8DigitAppRef.startDate;
-//       dummyApigwEvent.queryStringParameters['endDate'] = queryParameterWith8DigitAppRef.endDate;
-//       dummyApigwEvent.queryStringParameters['driverNumber'] = queryParameterWith8DigitAppRef.driverNumber;
-//       dummyApigwEvent.queryStringParameters['dtcCode'] = queryParameterWith8DigitAppRef.dtcCode;
-//       dummyApigwEvent.queryStringParameters['staffNumber'] = queryParameterWith8DigitAppRef.staffNumber;
-//       dummyApigwEvent.queryStringParameters['excludeAutoSavedTests'] =
-//           queryParameterWith8DigitAppRef.excludeAutoSavedTests;
-//       dummyApigwEvent.queryStringParameters['applicationReference'] = queryParameterWith8DigitAppRef
-//           .applicationReference;
-//       dummyApigwEvent.queryStringParameters['activityCode'] = queryParameterWith8DigitAppRef.activityCode;
-//       dummyApigwEvent.queryStringParameters['category'] = queryParameterWith8DigitAppRef.category;
-//       dummyApigwEvent.queryStringParameters['passCertificateNumber'] = queryParameter.passCertificateNumber;
-//       moqSearchResults.setup(x => x(It.isAny())).returns(() => Promise.resolve(testResult));
-//       const resp = await handler(dummyApigwEvent, dummyContext);
-//       expect(resp.statusCode).toBe(200);
-//       expect(JSON.parse(resp.body)).toEqual(testResultResponse);
-//       moqSearchResults.verify(x => x(It.isObjectWith(queryParameterWith8DigitAppRef)), Times.once());
-//     });
-//   });
-//
-//   describe('request made by DLG', () => {
-//     beforeEach(() => {
-//       dummyApigwEvent.requestContext.authorizer = {
-//         examinerRole: UserRole.DLG,
-//       };
-//       moqSearchResults.setup(x => x(It.isAny())).returns(() => Promise.resolve(testResult));
-//     });
-//
-//     it('should get relevant results when searching by correct staff number reference', async () => {
-//       dummyApigwEvent.queryStringParameters['staffNumber'] = queryParameter.staffNumber;
-//       const resp = await handler(dummyApigwEvent, dummyContext);
-//       expect(resp.statusCode).toBe(200);
-//       expect(JSON.parse(resp.body)).toEqual(testResultResponse);
-//     });
-//
-//     it('should get relevant results when searching by correct application reference', async () => {
-//       dummyApigwEvent.queryStringParameters['applicationReference'] = queryParameter.applicationReference;
-//       const resp = await handler(dummyApigwEvent, dummyContext);
-//       expect(resp.statusCode).toBe(200);
-//       expect(JSON.parse(resp.body)).toEqual(testResultResponse);
-//     });
-//
-//     it('should get relevant results when searching by correct driver number', async () => {
-//       dummyApigwEvent.queryStringParameters['driverNumber'] = queryParameter.driverNumber;
-//       const resp = await handler(dummyApigwEvent, dummyContext);
-//       expect(resp.statusCode).toBe(200);
-//       expect(JSON.parse(resp.body)).toEqual(testResultResponse);
-//     });
-//   });
-// });
+import { handler } from '../handler';
+import * as activeTestCentres from '../repositories/active-test-centres';
+import * as bootstrapConfig from '../../../../common/config/config';
+
+const lambdaTestUtils = require('aws-lambda-test-utils');
+
+describe('testCentres handler', () => {
+  const mockEvent = lambdaTestUtils.mockEventCreator.createAPIGatewayEvent();
+
+  beforeEach(() => {
+    spyOn(bootstrapConfig, 'bootstrapConfig');
+  });
+
+  describe('call handler', () => {
+    it('should return test centres and a response code of 200', async () => {
+      const mockTestCentres = [
+        {
+          centreId: '3025',
+          costCode: 'LON',
+          centreName: 'London 1',
+          commissionDate: null,
+          decommissionDate: null,
+        },
+        {
+          centreId: '3026',
+          costCode: 'WALES',
+          centreName: 'Wales test centre',
+          commissionDate: null,
+          decommissionDate: null,
+        },
+        {
+          centreId: '3027',
+          costCode: 'SCOT',
+          centreName: 'SCOTLAND TEST CENTRE',
+          commissionDate: null,
+          decommissionDate: null,
+        },
+      ];
+
+      spyOn(activeTestCentres, 'findTestCentres').and.returnValue(Promise.resolve(mockTestCentres));
+
+      mockEvent.queryStringParameters = {
+        testCentreActiveDate: '01/01/2001',
+        decommissionTimeFrame: '01/01/2020',
+      };
+
+      const resp = await handler(mockEvent);
+      expect(resp.statusCode).toBe(200);
+      expect(resp.body).toEqual(JSON.stringify(
+        {
+          active: [
+            {
+              centreId: '3025',
+              costCode: 'LON',
+              centreName: 'London 1',
+            },
+            {
+              centreId: '3026',
+              costCode: 'WALES',
+              centreName: 'Wales test centre',
+            },
+            {
+              centreId: '3027',
+              costCode: 'SCOT',
+              centreName: 'SCOTLAND TEST CENTRE',
+            },
+          ],
+          inactive: [],
+        },
+      ));
+    });
+  });
+});

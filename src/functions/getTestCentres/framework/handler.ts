@@ -28,7 +28,7 @@ export async function handler(event: APIGatewayProxyEvent): Promise<Response> {
                     || isBefore(new Date(testCentreDecommissionDate), centre.decommissionDate))
     ));
 
-    // find all centres that wernt between the dates
+    // find all centres that weren't between the dates
     const inactiveTestCentres: ExtendedTestCentre[] = allTestCentres
       .filter((centre) => activeTestCentres.indexOf(centre) < 0);
 
