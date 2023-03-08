@@ -1,0 +1,115 @@
+{
+  "active": [
+    {
+      "centreId": 1000,
+      "costCode": "DEFTCZ",
+      "centreName": "Z Meeting Place"
+    },
+    {
+      "centreId": 3024,
+      "costCode": "DER(1)",
+      "centreName": "Derby 1"
+    },
+    {
+      "centreId": 3025,
+      "costCode": "LON",
+      "centreName": "London 1"
+    },
+    {
+      "centreId": 3026,
+      "costCode": "WALES",
+      "centreName": "Wales test centre"
+    },
+    {
+      "centreId": 3027,
+      "costCode": "SCOT",
+      "centreName": "SCOTLAND TEST CENTRE"
+    },
+    {
+      "centreId": 3028,
+      "costCode": "DBYREM",
+      "centreName": "DERBY REMOTE"
+    },
+    {
+      "centreId": 3029,
+      "costCode": "DBYOUT",
+      "centreName": "DERBY OUTSTATION"
+    },
+    {
+      "centreId": 3030,
+      "costCode": "CARD",
+      "centreName": "Cardiff"
+    },
+    {
+      "centreId": 3031,
+      "costCode": "LON2",
+      "centreName": "London 2"
+    },
+    {
+      "centreId": 3032,
+      "costCode": "EU3D1",
+      "centreName": "EU3D Test Centre 1"
+    },
+    {
+      "centreId": 3033,
+      "costCode": "A1234",
+      "centreName": "Test DA"
+    },
+    {
+      "centreId": 3034,
+      "costCode": "B1234",
+      "centreName": "Test DA2"
+    },
+    {
+      "centreId": 3035,
+      "costCode": "C1234",
+      "centreName": "Test DA3"
+    },
+    {
+      "centreId": 3036,
+      "costCode": "D1234",
+      "centreName": "Test DA4"
+    },
+    {
+      "centreId": 3037,
+      "costCode": "T-3373",
+      "centreName": "Large Test Centre - Full Capability"
+    },
+    {
+      "centreId": 3038,
+      "costCode": "MMA1",
+      "centreName": "MMA Test Centre 1"
+    },
+    {
+      "centreId": 3039,
+      "costCode": "MMA2",
+      "centreName": "MMA Test Centre 2"
+    },
+    {
+      "centreId": 3040,
+      "costCode": "MMA3",
+      "centreName": "MMA Test Centre 3"
+    },
+    {
+      "centreId": 3041,
+      "costCode": "SCTC1",
+      "centreName": "SC Test Centre 1"
+    },
+    {
+      "centreId": 3042,
+      "costCode": "SCTC2",
+      "centreName": "SC Test Centre 2"
+    },
+    {
+      "centreId": 3044,
+      "costCode": "LMTC1",
+      "centreName": "Voc Manoeuvre TC1"
+    },
+    {
+      "centreId": 3045,
+      "costCode": "LMTC2",
+      "centreName": "Voc Manoeuvre TC2"
+    }
+  ],
+  "inactive": []
+}
