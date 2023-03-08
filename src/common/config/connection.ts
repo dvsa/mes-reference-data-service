@@ -4,6 +4,7 @@ import { certificate } from '../certs/ssl_profiles';
 
 export const getConnection = (): mysql.Connection => {
   const configuration = config();
+
   const connection = mysql.createConnection({
     host: configuration.tarsReplicaDatabaseHostname,
     database: configuration.tarsReplicaDatabaseName,
@@ -11,10 +12,8 @@ export const getConnection = (): mysql.Connection => {
     password: configuration.tarsReplicaDatabasePassword,
     charset: 'UTF8_GENERAL_CI',
     ssl: certificate,
-    authSwitchHandler(data, cb: any) {
-      if (data.pluginName === 'mysql_clear_password') {
-        cb(null, Buffer.from(`${configuration.tarsReplicaDatabasePassword}\0`));
-      }
+    authPlugins: {
+      mysql_clear_password: () => () => Buffer.from(`${configuration.tarsReplicaDatabasePassword}\0`),
     },
   });
   return connection;

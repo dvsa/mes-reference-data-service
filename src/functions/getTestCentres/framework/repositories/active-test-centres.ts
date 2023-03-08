@@ -13,7 +13,7 @@ export const findTestCentres: () => Promise<any> = async () => {
 
   info('Searching for all test centres');
   try {
-    result = query(connection, getTestCentres());
+    result = await query(connection, getTestCentres());
   } finally {
     connection.end();
   }
