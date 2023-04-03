@@ -21,7 +21,7 @@ interface TestCentres {
  * Call TARS replica for a list of all test centres
  */
 export const findTestCentresRemote: () => Promise<any> = async () => {
-  const connection: mysql.Connection = getConnection();
+  const connection: mysql.Connection = await getConnection();
 
   let result;
 

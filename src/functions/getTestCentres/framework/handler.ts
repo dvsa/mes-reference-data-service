@@ -3,7 +3,7 @@ import { bootstrapLogging, error } from '@dvsa/mes-microservice-common/applicati
 import { isBefore } from 'date-fns';
 import createResponse from '../../../common/application/utils/createResponse';
 import Response from '../../../common/application/api/Response';
-import { bootstrapConfig } from '../../../common/config/config';
+// import { bootstrapConfig } from '../../../common/config/config';
 import { findTestCentresLocal, findTestCentresRemote } from './repositories/active-test-centres';
 import { getDate } from './repositories/get-date';
 import { ExtendedTestCentre } from '../../../common/domain/extended-test-centre';
@@ -15,7 +15,7 @@ export async function handler(event: APIGatewayProxyEvent): Promise<Response> {
   const testCentreActiveDate = getDate(event.queryStringParameters, 'testCentreActiveDate');
   const testCentreDecommissionDate = getDate(event.queryStringParameters, 'decommissionTimeFrame');
 
-  await bootstrapConfig();
+  // await bootstrapConfig();
   try {
     const allTestCentres: ExtendedTestCentre[] = await findTestCentresRemote();
 
