@@ -1,4 +1,5 @@
-import { throwIfNotPresent, tryFetchRdsAccessToken } from './config-helpers';
+import * as awsSdk from 'aws-sdk';
+import { getEnvSecretName } from './config-helpers';
 
 export type Config = {
   isOffline: boolean;
@@ -8,28 +9,51 @@ export type Config = {
   tarsReplicaDatabasePassword: string;
 };
 
-let configuration: Config;
-export const bootstrapConfig = async (): Promise<void> => {
-  configuration = {
-    isOffline: !!process.env.IS_OFFLINE,
-    tarsReplicaDatabaseHostname: throwIfNotPresent(
-      process.env.TARS_REPLICA_HOST_NAME,
-      'tarsReplicaDatabaseHostname',
-    ),
-    tarsReplicaDatabaseName: throwIfNotPresent(
-      process.env.TARS_REPLICA_DB_NAME,
-      'tarsReplicaDatabaseName',
-    ),
-    tarsReplicaDatabaseUsername: throwIfNotPresent(
-      process.env.TARS_REPLICA_DB_USERNAME,
-      'tarsReplicaDatabaseUsername',
-    ),
-    tarsReplicaDatabasePassword: await tryFetchRdsAccessToken(
-      process.env.TARS_REPLICA_ENDPOINT,
-      process.env.TARS_REPLICA_DB_USERNAME,
-      'SECRET_DB_PASSWORD_KEY',
-    ),
-  };
-};
+// let configuration: Config;
+// export const getConfig = async (): Promise<string> => {
+//   const secretsManager = new awsSdk.SecretsManager();
+//
+//   const response = await secretsManager.getSecretValue({
+//     SecretId: getEnvSecretName(process.env.SECRET_NAME),
+//   }).promise();
+//
+//   console.log('response', response);
+//
+//   return JSON.parse(<string>response.SecretString);
 
-export const config = (): Config => configuration;
+//
+//
+// configuration = {
+//   isOffline: !!process.env.IS_OFFLINE,
+//   tarsReplicaDatabaseHostname: throwIfNotPresent(
+//     process.env.TARS_REPLICA_HOST_NAME,
+//     'tarsReplicaDatabaseHostname',
+//   ),
+//   tarsReplicaDatabaseName: throwIfNotPresent(
+//     process.env.TARS_REPLICA_DB_NAME,
+//     'tarsReplicaDatabaseName',
+//   ),
+//   tarsReplicaDatabaseUsername: throwIfNotPresent(
+//     process.env.TARS_REPLICA_DB_USERNAME,
+//     'tarsReplicaDatabaseUsername',
+//   ),
+//   tarsReplicaDatabasePassword: await tryFetchRdsAccessToken(
+//     process.env.TARS_REPLICA_ENDPOINT,
+//     process.env.TARS_REPLICA_DB_USERNAME,
+//     'SECRET_DB_PASSWORD_KEY',
+//   ),
+// };
+// };
+
+// export const getConfig = (): Config => configuration;
+
+export async function getConfig() {
+  const secretsManager = new awsSdk.SecretsManager();
+  const response = await secretsManager.getSecretValue({
+    SecretId: getEnvSecretName(process.env.SECRET_NAME),
+  }).promise();
+
+  console.log('response', response);
+
+  return JSON.parse(<string>response.SecretString);
+}
