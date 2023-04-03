@@ -52,8 +52,5 @@ export async function getConfig() {
   const response = await secretsManager.getSecretValue({
     SecretId: getEnvSecretName(process.env.SECRET_NAME),
   }).promise();
-
-  console.log('response', response);
-
   return JSON.parse(<string>response.SecretString);
 }
