@@ -12,24 +12,30 @@ export type Config = {
 let configuration: Config;
 export const bootstrapConfig = async (): Promise<void> => {
   const secretsManager = new awsSdk.SecretsManager();
-  const response = await secretsManager.getSecretValue({
-    SecretId: getEnvSecretName(process.env.SECRET_NAME),
-  }).promise();
-  const dbCredentials = JSON.parse(<string>response.SecretString);
 
-  configuration = {
-    isOffline: !!process.env.IS_OFFLINE,
-    tarsReplicaDatabaseHostname: throwIfNotPresent(
-      process.env.TARS_REPLICA_HOST_NAME,
-      'tarsReplicaDatabaseHostname',
-    ),
-    tarsReplicaDatabaseName: throwIfNotPresent(
-      process.env.TARS_REPLICA_DB_NAME,
-      'tarsReplicaDatabaseName',
-    ),
-    tarsReplicaDatabaseUsername: dbCredentials.username,
-    tarsReplicaDatabasePassword: dbCredentials.password,
-  };
+  try {
+    const response = await secretsManager.getSecretValue({
+      SecretId: getEnvSecretName(process.env.SECRET_NAME),
+    }).promise();
+
+    const dbCredentials = JSON.parse(<string>response.SecretString);
+
+    configuration = {
+      isOffline: !!process.env.IS_OFFLINE,
+      tarsReplicaDatabaseHostname: throwIfNotPresent(
+        process.env.TARS_REPLICA_HOST_NAME,
+        'tarsReplicaDatabaseHostname',
+      ),
+      tarsReplicaDatabaseName: throwIfNotPresent(
+        process.env.TARS_REPLICA_DB_NAME,
+        'tarsReplicaDatabaseName',
+      ),
+      tarsReplicaDatabaseUsername: dbCredentials.username,
+      tarsReplicaDatabasePassword: dbCredentials.password,
+    };
+  } catch (error) {
+    throw new Error('Secret was not retrieved');
+  }
 };
 
 export const config = (): Config => configuration;

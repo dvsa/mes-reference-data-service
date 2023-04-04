@@ -11,11 +11,11 @@ export const getConnection = (): mysql.Connection => {
     password: configuration.tarsReplicaDatabasePassword,
     charset: 'UTF8_GENERAL_CI',
     ssl: certificate,
-    authSwitchHandler(data, cb: any) {
-      if (data.pluginName === 'mysql_clear_password') {
-        cb(null, Buffer.from(`${configuration.tarsReplicaDatabasePassword}\0`));
-      }
-    },
+    // authSwitchHandler(data, cb: any) {
+    //   if (data.pluginName === 'mysql_clear_password') {
+    //     cb(null, Buffer.from(`${configuration.tarsReplicaDatabasePassword}\0`));
+    //   }
+    // },
   });
   return connection;
 };
