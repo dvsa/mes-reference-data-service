@@ -7,6 +7,13 @@ export const throwIfNotPresent = (value: string | null | undefined, configKey: s
   return value;
 };
 
+export const getEnvSecretName = (name: string | undefined) => {
+  if (!name || name.trim().length === 0) {
+    throw new Error('Secret name was not provided with a value');
+  }
+  return name;
+};
+
 const iamRdsConfigValid = (hostname: string | undefined, username: string | undefined) => {
   const hostnameValid = hostname && hostname.trim().length > 0;
   const usernameValid = username && username.trim().length > 0;

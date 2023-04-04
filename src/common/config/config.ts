@@ -1,4 +1,5 @@
-import { throwIfNotPresent, tryFetchRdsAccessToken } from './config-helpers';
+import * as awsSdk from 'aws-sdk';
+import { getEnvSecretName, throwIfNotPresent } from './config-helpers';
 
 export type Config = {
   isOffline: boolean;
@@ -10,26 +11,31 @@ export type Config = {
 
 let configuration: Config;
 export const bootstrapConfig = async (): Promise<void> => {
-  configuration = {
-    isOffline: !!process.env.IS_OFFLINE,
-    tarsReplicaDatabaseHostname: throwIfNotPresent(
-      process.env.TARS_REPLICA_HOST_NAME,
-      'tarsReplicaDatabaseHostname',
-    ),
-    tarsReplicaDatabaseName: throwIfNotPresent(
-      process.env.TARS_REPLICA_DB_NAME,
-      'tarsReplicaDatabaseName',
-    ),
-    tarsReplicaDatabaseUsername: throwIfNotPresent(
-      process.env.TARS_REPLICA_DB_USERNAME,
-      'tarsReplicaDatabaseUsername',
-    ),
-    tarsReplicaDatabasePassword: await tryFetchRdsAccessToken(
-      process.env.TARS_REPLICA_ENDPOINT,
-      process.env.TARS_REPLICA_DB_USERNAME,
-      'SECRET_DB_PASSWORD_KEY',
-    ),
-  };
+  const secretsManager = new awsSdk.SecretsManager();
+
+  try {
+    const response = await secretsManager.getSecretValue({
+      SecretId: getEnvSecretName(process.env.SECRET_NAME),
+    }).promise();
+
+    const dbCredentials = JSON.parse(<string>response.SecretString);
+
+    configuration = {
+      isOffline: !!process.env.IS_OFFLINE,
+      tarsReplicaDatabaseHostname: throwIfNotPresent(
+        process.env.TARS_REPLICA_HOST_NAME,
+        'tarsReplicaDatabaseHostname',
+      ),
+      tarsReplicaDatabaseName: throwIfNotPresent(
+        process.env.TARS_REPLICA_DB_NAME,
+        'tarsReplicaDatabaseName',
+      ),
+      tarsReplicaDatabaseUsername: dbCredentials.username,
+      tarsReplicaDatabasePassword: dbCredentials.password,
+    };
+  } catch (error) {
+    throw new Error('Secret was not retrieved');
+  }
 };
 
 export const config = (): Config => configuration;
