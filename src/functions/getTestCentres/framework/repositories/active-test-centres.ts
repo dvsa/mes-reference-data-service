@@ -26,8 +26,11 @@ export const findTestCentresRemote: () => Promise<any> = async () => {
   let result;
 
   info('Searching for all test centres using remote data');
+
   try {
     result = await query(connection, getTestCentres());
+
+    info('Successfully read remote data');
   } finally {
     connection.end();
   }
