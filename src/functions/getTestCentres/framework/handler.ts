@@ -9,14 +9,15 @@ import { getDate } from './repositories/get-date';
 import { ExtendedTestCentre } from '../../../common/domain/extended-test-centre';
 
 export async function handler(event: APIGatewayProxyEvent): Promise<Response> {
-  bootstrapLogging('identify active test centres', event);
+  bootstrapLogging('ref-data-test-centres', event);
 
   // Set dates to parameters OR defaults
   const testCentreActiveDate = getDate(event.queryStringParameters, 'testCentreActiveDate');
   const testCentreDecommissionDate = getDate(event.queryStringParameters, 'decommissionTimeFrame');
 
-  await bootstrapConfig();
   try {
+    await bootstrapConfig();
+
     const allTestCentres: ExtendedTestCentre[] = await findTestCentresRemote();
 
     // extract centres between the specified dates
@@ -36,7 +37,11 @@ export async function handler(event: APIGatewayProxyEvent): Promise<Response> {
       inactive: inactiveTestCentres.map(({ commissionDate, decommissionDate, ...centres }) => centres),
     }, 200);
   } catch (err: unknown) {
-    error(err as string);
+    if (err instanceof Error) {
+      error('Error', (err as Error).message);
+    } else {
+      error('Unknown error', err);
+    }
 
     const { active } = findTestCentresLocal();
 
