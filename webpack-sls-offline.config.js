@@ -15,11 +15,11 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: [ '.ts', '.js', '.json' ]
+    extensions: ['.ts', '.js', '.json'],
   },
   output: {
-    filename: `[name].js`,
+    filename: '[name].js',
     path: path.join(__dirname, 'build', 'bundle'),
-    libraryTarget: 'commonjs'
+    libraryTarget: 'commonjs',
   },
 };

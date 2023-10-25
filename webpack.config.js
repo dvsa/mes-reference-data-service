@@ -1,18 +1,19 @@
 const path = require('path');
+const webpack = require('webpack');
 const YAML = require('yamljs');
 
 const allEntries = Object.keys(YAML.load('serverless.yml').functions)
-  .filter(func => (func.indexOf('local') === -1))
+  .filter((func) => (func.indexOf('local') === -1))
   .reduce((entryObj, functionName) => {
-    entryObj[functionName] = `.${path.sep}${path.join('src', 'functions', functionName, 'framework', 'handler.ts')}`
+    entryObj[functionName] = `.${path.sep}${path.join('src', 'functions', functionName, 'framework', 'handler.ts')}`;
     return entryObj;
   }, {});
 
-module.exports = env => ({
+module.exports = (env) => ({
   target: 'node',
   mode: 'production',
-  entry: env && env.lambdas ?
-    env.lambdas.split(',').reduce((entryObj, fnName) => ({ ...entryObj, [fnName]: allEntries[fnName] }), {})
+  entry: env && env.lambdas
+    ? env.lambdas.split(',').reduce((entryObj, fnName) => ({ ...entryObj, [fnName]: allEntries[fnName] }), {})
     : allEntries,
   module: {
     rules: [
@@ -23,12 +24,17 @@ module.exports = env => ({
       },
     ],
   },
+  plugins: [
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^aws-crt/,
+    }),
+  ],
   resolve: {
-    extensions: [ '.ts', '.js', '.json' ],
+    extensions: ['.ts', '.js', '.json'],
   },
   output: {
-    filename: `[name].js`,
+    filename: '[name].js',
     path: path.join(__dirname, 'build', 'bundle'),
-    libraryTarget: 'commonjs'
+    libraryTarget: 'commonjs',
   },
 });
