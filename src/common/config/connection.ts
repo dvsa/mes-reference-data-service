@@ -4,7 +4,7 @@ import { certificate } from '../certs/ssl_profiles';
 
 export const getConnection = (): mysql.Connection => {
   const configuration = config();
-  const connection = mysql.createConnection({
+  return mysql.createConnection({
     host: configuration.tarsReplicaDatabaseHostname,
     database: configuration.tarsReplicaDatabaseName,
     user: configuration.tarsReplicaDatabaseUsername,
@@ -12,5 +12,4 @@ export const getConnection = (): mysql.Connection => {
     charset: 'UTF8_GENERAL_CI',
     ssl: certificate,
   });
-  return connection;
 };

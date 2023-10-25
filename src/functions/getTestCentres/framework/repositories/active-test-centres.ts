@@ -1,4 +1,3 @@
-import { info } from '@dvsa/mes-microservice-common/application/utils/logger';
 import * as mysql from 'mysql2';
 import { getTestCentres } from '../database/query-builder';
 import { getConnection } from '../../../../common/config/connection';
@@ -25,12 +24,8 @@ export const findTestCentresRemote: () => Promise<any> = async () => {
 
   let result;
 
-  info('Searching for all test centres using remote data');
-
   try {
     result = await query(connection, getTestCentres());
-
-    info('Successfully read remote data');
   } finally {
     connection.end();
   }
@@ -50,8 +45,6 @@ export const findTestCentresLocal = (): TestCentres => {
       inactive: [],
     };
   }
-
-  info('Searching for all test centres using local data');
 
   const env: string = endpoint[1];
 
