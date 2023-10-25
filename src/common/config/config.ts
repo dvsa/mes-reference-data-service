@@ -34,7 +34,7 @@ export const bootstrapConfig = async (): Promise<void> => {
       tarsReplicaDatabasePassword: dbCredentials.password,
     };
   } catch (error) {
-    throw new Error('Secret was not retrieved');
+    throw new Error(`Secret was not retrieved: ${error}`);
   }
 };
 

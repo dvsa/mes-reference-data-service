@@ -10,16 +10,15 @@ import { getInactiveTestCentres, getActiveTestCentres } from '../application/get
 import { mapTestCentres } from '../application/map-test-centres';
 
 export async function handler(event: APIGatewayProxyEvent): Promise<Response> {
-  bootstrapLogging('ref-data-test-centres', event);
-
-  // Set dates to parameters OR defaults
-  const activeDate = getDate(event.queryStringParameters, 'testCentreActiveDate');
-  const decommissionDate = getDate(event.queryStringParameters, 'decommissionTimeFrame');
-
   try {
-    await bootstrapConfig();
+    bootstrapLogging('ref-data-test-centres', event);
 
-    info('Searching for all test centres using remote data');
+    // Set dates to parameters OR defaults
+    const activeDate = getDate(event.queryStringParameters, 'testCentreActiveDate');
+
+    const decommissionDate = getDate(event.queryStringParameters, 'decommissionTimeFrame');
+
+    await bootstrapConfig();
 
     const allTestCentres: ExtendedTestCentre[] = await findTestCentresRemote();
 
