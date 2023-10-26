@@ -28,9 +28,9 @@
     "test:jasmine-coverage": "nyc npm run test"
   },
   "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.435.0",
     "@dvsa/mes-journal-schema": "1.3.1",
     "@dvsa/mes-microservice-common": "^1.0.2",
-    "aws-sdk": "^2.1478.0",
     "date-fns": "^2.30.0",
     "mysql2": "^3.6.2"
   },
