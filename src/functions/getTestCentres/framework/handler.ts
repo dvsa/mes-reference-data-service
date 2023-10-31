@@ -1,7 +1,6 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { bootstrapLogging, error, info } from '@dvsa/mes-microservice-common/application/utils/logger';
-import createResponse from '../../../common/application/utils/createResponse';
-import Response from '../../../common/application/api/Response';
+import { createResponse } from '@dvsa/mes-microservice-common/application/api/create-response';
 import { bootstrapConfig } from '../../../common/config/config';
 import { findTestCentresLocal, findTestCentresRemote } from './repositories/active-test-centres';
 import { getDate } from '../application/get-date';
@@ -9,7 +8,7 @@ import { ExtendedTestCentre } from '../../../common/domain/extended-test-centre'
 import { getInactiveTestCentres, getActiveTestCentres } from '../application/get-test-centres';
 import { mapTestCentres } from '../application/map-test-centres';
 
-export async function handler(event: APIGatewayProxyEvent): Promise<Response> {
+export async function handler(event: APIGatewayProxyEvent) {
   try {
     bootstrapLogging('ref-data-test-centres', event);
 
