@@ -12,7 +12,7 @@ interface TestCentre {
   centreName: string;
 }
 
-interface TestCentres {
+export interface TestCentres {
   inactive: TestCentre[];
   active: TestCentre[];
 }
@@ -48,7 +48,7 @@ export const findTestCentresLocal = (): TestCentres => {
 
   const env: string = endpoint[1];
 
-  switch (env.toLowerCase()) {
+  switch (env?.toLowerCase()) {
     case 'live':
     case 'prep':
       return testCentresLive;
