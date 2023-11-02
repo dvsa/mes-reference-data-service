@@ -1,11 +1,6 @@
 import * as mysql from 'mysql2';
 
-/**
- * Get all active test centres.
- * @returns The examiners
- */
-export const getTestCentres = (): string => {
-  const query = `
+export const TC_QUERY = `
             SELECT TC.TC_ID as centreId
                  , TC.TC_COST_CENTRE_CODE as costCode
                  , TCN.TC_NAME as centreName
@@ -15,6 +10,5 @@ export const getTestCentres = (): string => {
                , TEST_CENTRE_NAME TCN
             WHERE TC.TC_ID = TCN.TC_ID
         `;
-  const args: string[] = [];
-  return mysql.format(query, args);
-};
+
+export const getTestCentres = (): string => mysql.format(TC_QUERY, []);

@@ -1,6 +1,7 @@
 import { handler } from '../handler';
 import * as activeTestCentres from '../repositories/active-test-centres';
 import * as bootstrapConfig from '../../../../common/config/config';
+import { ExtendedTestCentre } from '../../../../common/domain/extended-test-centre';
 
 const lambdaTestUtils = require('aws-lambda-test-utils');
 
@@ -27,7 +28,7 @@ describe('testCentres handler', () => {
       commissionDate: null,
       decommissionDate: null,
     },
-  ];
+  ] as unknown as ExtendedTestCentre[];
   const mockEvent = lambdaTestUtils.mockEventCreator.createAPIGatewayEvent();
 
   beforeEach(() => {
@@ -71,6 +72,8 @@ describe('testCentres handler', () => {
 
   describe('200 - Fallback', () => {
     it('should return test centres and a response code of 200 however using local data', async () => {
+      process.env.TARS_REPLICA_ENDPOINT = 'EP-dev';
+
       spyOn(activeTestCentres, 'findTestCentresRemote').and.rejectWith(new Error('some error'));
 
       const resp = await handler(mockEvent);
