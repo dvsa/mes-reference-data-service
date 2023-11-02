@@ -1,4 +1,4 @@
-import { GetSecretValueCommand, SecretsManager } from '@aws-sdk/client-secrets-manager';
+import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
 import { getEnvSecretName, throwIfNotPresent } from './config-helpers';
 
 export type Config = {
@@ -12,7 +12,7 @@ export type Config = {
 let configuration: Config;
 export const bootstrapConfig = async (): Promise<void> => {
   try {
-    const response = await new SecretsManager().send(
+    const response = await new SecretsManagerClient().send(
       new GetSecretValueCommand({
         SecretId: getEnvSecretName(process.env.SECRET_NAME),
       }),
@@ -34,7 +34,8 @@ export const bootstrapConfig = async (): Promise<void> => {
       tarsReplicaDatabasePassword: dbCredentials.password,
     };
   } catch (error) {
-    throw new Error(`Secret was not retrieved: ${error}`);
+    const msg = error instanceof Error ? error.message : error;
+    throw new Error(`Secret was not retrieved: ${msg}`);
   }
 };
 

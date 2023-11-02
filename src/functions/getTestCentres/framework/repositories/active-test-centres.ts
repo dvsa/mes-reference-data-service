@@ -5,6 +5,7 @@ import { query } from '../../../../common/framework/mysql/database';
 import * as testCentresDev from '../../../../assets/test-centres.dev.json';
 import * as testCentresUAT from '../../../../assets/test-centres.uat.json';
 import * as testCentresLive from '../../../../assets/test-centres.live.json';
+import { ExtendedTestCentre } from '../../../../common/domain/extended-test-centre';
 
 interface TestCentre {
   centreId: number;
@@ -19,18 +20,19 @@ export interface TestCentres {
 /**
  * Call TARS replica for a list of all test centres
  */
-export const findTestCentresRemote: () => Promise<any> = async () => {
+export const findTestCentresRemote = async (): Promise<ExtendedTestCentre[]> => {
   const connection: mysql.Connection = getConnection();
 
-  let result;
+  let batch: mysql.RowDataPacket[];
 
   try {
-    result = await query(connection, getTestCentres());
+    const [rows] = await query(connection, getTestCentres());
+    batch = rows as mysql.RowDataPacket[];
   } finally {
     connection.end();
   }
 
-  return result;
+  return batch as ExtendedTestCentre[];
 };
 
 /**
@@ -38,13 +40,6 @@ export const findTestCentresRemote: () => Promise<any> = async () => {
  */
 export const findTestCentresLocal = (): TestCentres => {
   const endpoint: string[] = (process.env.TARS_REPLICA_ENDPOINT || '').split('-');
-
-  if (endpoint.length === 0) {
-    return {
-      active: [],
-      inactive: [],
-    };
-  }
 
   const env: string = endpoint[1];
 
