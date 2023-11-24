@@ -32,7 +32,7 @@
     "@dvsa/mes-journal-schema": "1.3.1",
     "@dvsa/mes-microservice-common": "1.1.0",
     "date-fns": "^2.30.0",
-    "mysql2": "^3.6.2"
+    "mysql2": "^3.6.3"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.125",
