@@ -24,19 +24,18 @@ export interface TestCentres {
 export const findTestCentresRemote = async (): Promise<ExtendedTestCentre[]> => {
   const connection: mysql.Connection = getConnection();
 
-  let result;
+  let batch: mysql.RowDataPacket[];
 
   info('Searching for all test centres using remote data');
 
   try {
-    result = await query(connection, getTestCentres());
-
-    info('Successfully read remote data');
+    const [rows] = await query(connection, getTestCentres());
+    batch = rows as mysql.RowDataPacket[];
   } finally {
     connection.end();
   }
 
-  return result as ExtendedTestCentre[];
+  return batch as ExtendedTestCentre[];
 };
 
 /**
