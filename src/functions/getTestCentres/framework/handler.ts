@@ -35,8 +35,6 @@ export async function handler(event: APIGatewayProxyEvent) {
   } catch (err) {
     error((err instanceof Error) ? err.message : `Unknown error: ${err}`);
 
-    info('Searching for all test centres using local data');
-
     const { active } = findTestCentresLocal();
 
     return createResponse({ active, inactive: [] });
