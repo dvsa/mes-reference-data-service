@@ -1,21 +1,28 @@
-import { generateSignerOptions } from '../config-helpers';
+import { getEnvSecretName, throwIfNotPresent } from '../config-helpers';
 
-describe('config helper: generateSignerOptions', () => {
-  afterEach(() => {
-    delete process.env.AWS_REGION;
+describe('Config helpers', () => {
+  const value = 'data value';
+  const configKey = 'key';
+  const secretName = 'sec';
+
+  describe('throwIfNotPresent', () => {
+    it('should return value when it exists', () => {
+      expect(throwIfNotPresent(value, configKey)).toEqual(value);
+    });
+    it('should throw error with the configKey in the output', () => {
+      expect(
+        () => throwIfNotPresent(null, configKey),
+      ).toThrow(new Error(`Configuration item ${configKey} was not provided with a value`));
+    });
   });
-
-  it('should return correct signer options with the given hostname and username', async () => {
-    const hostname = 'hostname string of the cluster';
-    const username = 'username to connect as';
-    process.env.AWS_REGION = 'TEST';
-    const port = 3306;
-
-    const result = generateSignerOptions(hostname, username);
-
-    expect(result.region).toBe(process.env.AWS_REGION);
-    expect(result.hostname).toBe(hostname);
-    expect(result.port).toBe(port);
-    expect(result.username).toBe(username);
+  describe('getEnvSecretName', () => {
+    it('should return value when exists', () => {
+      expect(getEnvSecretName(secretName)).toEqual(secretName);
+    });
+    it('should throw error when secret name is not defined', () => {
+      expect(
+        () => getEnvSecretName(undefined),
+      ).toThrow(new Error('Secret name was not provided with a value'));
+    });
   });
 });

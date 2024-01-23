@@ -6,6 +6,7 @@ import { query } from '../../../../common/framework/mysql/database';
 import * as testCentresDev from '../../../../assets/test-centres.dev.json';
 import * as testCentresUAT from '../../../../assets/test-centres.uat.json';
 import * as testCentresLive from '../../../../assets/test-centres.live.json';
+import { ExtendedTestCentre } from '../../../../common/domain/extended-test-centre';
 
 interface TestCentre {
   centreId: number;
@@ -13,14 +14,14 @@ interface TestCentre {
   centreName: string;
 }
 
-interface TestCentres {
+export interface TestCentres {
   inactive: TestCentre[];
   active: TestCentre[];
 }
 /**
  * Call TARS replica for a list of all test centres
  */
-export const findTestCentresRemote: () => Promise<any> = async () => {
+export const findTestCentresRemote = async (): Promise<ExtendedTestCentre[]> => {
   const connection: mysql.Connection = getConnection();
 
   let result;
@@ -35,7 +36,7 @@ export const findTestCentresRemote: () => Promise<any> = async () => {
     connection.end();
   }
 
-  return result;
+  return result as ExtendedTestCentre[];
 };
 
 /**
@@ -55,7 +56,7 @@ export const findTestCentresLocal = (): TestCentres => {
 
   const env: string = endpoint[1];
 
-  switch (env.toLowerCase()) {
+  switch (env?.toLowerCase()) {
     case 'live':
     case 'prep':
       return testCentresLive;

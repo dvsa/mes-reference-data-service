@@ -1,47 +1,39 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
-import { bootstrapLogging, error } from '@dvsa/mes-microservice-common/application/utils/logger';
-import { isBefore } from 'date-fns';
-import createResponse from '../../../common/application/utils/createResponse';
-import Response from '../../../common/application/api/Response';
+import { bootstrapLogging, error, info } from '@dvsa/mes-microservice-common/application/utils/logger';
+import { createResponse } from '@dvsa/mes-microservice-common/application/api/create-response';
 import { bootstrapConfig } from '../../../common/config/config';
 import { findTestCentresLocal, findTestCentresRemote } from './repositories/active-test-centres';
-import { getDate } from './repositories/get-date';
+import { getDate } from '../application/get-date';
 import { ExtendedTestCentre } from '../../../common/domain/extended-test-centre';
+import { getInactiveTestCentres, getActiveTestCentres } from '../application/get-test-centres';
+import { mapTestCentres } from '../application/map-test-centres';
 
-export async function handler(event: APIGatewayProxyEvent): Promise<Response> {
-  bootstrapLogging('ref-data-test-centres', event);
-
-  // Set dates to parameters OR defaults
-  const testCentreActiveDate = getDate(event.queryStringParameters, 'testCentreActiveDate');
-  const testCentreDecommissionDate = getDate(event.queryStringParameters, 'decommissionTimeFrame');
-
+export async function handler(event: APIGatewayProxyEvent) {
   try {
+    bootstrapLogging('ref-data-test-centres', event);
+
+    // Set dates to parameters OR defaults
+    const activeDate = getDate(event.queryStringParameters, 'testCentreActiveDate');
+
+    const decommissionDate = getDate(event.queryStringParameters, 'decommissionTimeFrame');
+
     await bootstrapConfig();
 
     const allTestCentres: ExtendedTestCentre[] = await findTestCentresRemote();
 
     // extract centres between the specified dates
-    const activeTestCentres: ExtendedTestCentre[] = allTestCentres.filter((centre) => (
-      (centre.commissionDate === null
-                    || isBefore(centre.commissionDate, new Date(testCentreActiveDate)))
-                && (centre.decommissionDate === null
-                    || isBefore(new Date(testCentreDecommissionDate), centre.decommissionDate))
-    ));
+    const activeTestCentres: ExtendedTestCentre[] = getActiveTestCentres(allTestCentres, activeDate, decommissionDate);
 
-    // find all centres that wernt between the dates
-    const inactiveTestCentres: ExtendedTestCentre[] = allTestCentres
-      .filter((centre) => activeTestCentres.indexOf(centre) < 0);
+    // find all centres that aren't between the dates
+    const inactiveTestCentres: ExtendedTestCentre[] = getInactiveTestCentres(allTestCentres, activeTestCentres);
 
-    return createResponse({
-      active: activeTestCentres.map(({ commissionDate, decommissionDate, ...centres }) => centres),
-      inactive: inactiveTestCentres.map(({ commissionDate, decommissionDate, ...centres }) => centres),
-    }, 200);
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      error('Error', (err as Error).message);
-    } else {
-      error('Unknown error', err);
-    }
+    const response = mapTestCentres(activeTestCentres, inactiveTestCentres);
+
+    return createResponse(response);
+  } catch (err) {
+    error((err instanceof Error) ? err.message : `Unknown error: ${err}`);
+
+    info('Searching for all test centres using local data');
 
     const { active } = findTestCentresLocal();
 
