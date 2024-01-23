@@ -1,3 +1,4 @@
+import { info } from '@dvsa/mes-microservice-common/application/utils/logger';
 import * as mysql from 'mysql2';
 import { getTestCentres } from '../database/query-builder';
 import { getConnection } from '../../../../common/config/connection';
@@ -23,16 +24,19 @@ export interface TestCentres {
 export const findTestCentresRemote = async (): Promise<ExtendedTestCentre[]> => {
   const connection: mysql.Connection = getConnection();
 
-  let batch: mysql.RowDataPacket[];
+  let result;
+
+  info('Searching for all test centres using remote data');
 
   try {
-    const [rows] = await query(connection, getTestCentres());
-    batch = rows as mysql.RowDataPacket[];
+    result = await query(connection, getTestCentres());
+
+    info('Successfully read remote data');
   } finally {
     connection.end();
   }
 
-  return batch as ExtendedTestCentre[];
+  return result as ExtendedTestCentre[];
 };
 
 /**
@@ -40,6 +44,15 @@ export const findTestCentresRemote = async (): Promise<ExtendedTestCentre[]> => 
  */
 export const findTestCentresLocal = (): TestCentres => {
   const endpoint: string[] = (process.env.TARS_REPLICA_ENDPOINT || '').split('-');
+
+  if (endpoint.length === 0) {
+    return {
+      active: [],
+      inactive: [],
+    };
+  }
+
+  info('Searching for all test centres using local data');
 
   const env: string = endpoint[1];
 
