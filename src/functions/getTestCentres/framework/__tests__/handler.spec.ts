@@ -78,7 +78,7 @@ describe('testCentres handler', () => {
 
       const resp = await handler(mockEvent);
       expect(resp.statusCode).toBe(200);
-      expect(JSON.parse(resp.body as string)?.active.length).toEqual(22);
+      expect(JSON.parse(resp.body as string)?.active.length).toEqual(23);
       expect(JSON.parse(resp.body as string)?.inactive.length).toEqual(0);
     });
   });
