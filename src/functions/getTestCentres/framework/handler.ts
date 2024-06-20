@@ -11,7 +11,6 @@ import { mapTestCentres } from '../application/map-test-centres';
 export async function handler(event: APIGatewayProxyEvent) {
   try {
     bootstrapLogging('ref-data-test-centres', event);
-
     // Set dates to parameters OR defaults
     const activeDate = getDate(event.queryStringParameters, 'testCentreActiveDate');
 
@@ -22,6 +21,12 @@ export async function handler(event: APIGatewayProxyEvent) {
     const allTestCentres: ExtendedTestCentre[] = await findTestCentresRemote();
 
     info('Successfully read remote data');
+
+    if (process.env.USE_LOCAL_DATA) {
+      info('Using local data');
+      const { active } = findTestCentresLocal();
+      return createResponse({ active });
+    }
 
     // extract centres between the specified dates
     const activeTestCentres: ExtendedTestCentre[] = getActiveTestCentres(allTestCentres, activeDate, decommissionDate);

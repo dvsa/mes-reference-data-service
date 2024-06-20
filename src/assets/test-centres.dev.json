@@ -1,6 +1,11 @@
 {
   "active": [
     {
+      "centreId": 54321,
+      "costCode": "EXTC1",
+      "centreName": "Example Test Centre"
+    },
+    {
       "centreId": 1000,
       "costCode": "DEFTCZ",
       "centreName": "Z Meeting Place"
