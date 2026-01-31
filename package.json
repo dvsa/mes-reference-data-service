@@ -31,7 +31,7 @@
   "dependencies": {
     "@dvsa/mes-microservice-common": "1.2.0",
     "@dvsa/mes-journal-schema": "1.4.0",
-    "@aws-sdk/client-secrets-manager": "^3.821.0",
+    "@aws-sdk/client-secrets-manager": "^3.894.0",
     "date-fns": "^2.30.0",
     "mysql2": "3.9.8"
   },
